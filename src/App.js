@@ -7,6 +7,7 @@ import Signin from './components/Signin/Signin'
 import Register from './components/Register/Register'
 import Rank from './components/Rank/Rank'
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
+import Results from './components/Results/Results'
 import './App.css'
 
 const app = new Clarifai.App({
@@ -17,6 +18,7 @@ const initialState = {
   input: '',
   imgUrl: '',
   box: {},
+  results: {},
   route: 'signin',
   isSignedin: false,
   user: {
@@ -52,6 +54,25 @@ class App extends Component {
     this.setState({ box: box })
   }
 
+  displayResults = data => {
+    const age =
+      data.outputs[0].data.regions[0].data.face.age_appearance.concepts[0].name
+    const gender =
+      data.outputs[0].data.regions[0].data.face.gender_appearance.concepts[0]
+        .name
+    const race =
+      data.outputs[0].data.regions[0].data.face.multicultural_appearance
+        .concepts[0].name
+    console.log('age', age, 'gender', gender, 'race', race)
+    this.setState({
+      results: {
+        age: age,
+        gender: gender,
+        race: race
+      }
+    })
+  }
+
   onInputChange = event => {
     this.setState({ input: event.target.value })
   }
@@ -60,9 +81,10 @@ class App extends Component {
     this.setState({ imgUrl: this.state.input })
 
     app.models
-      .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+      .predict(Clarifai.DEMOGRAPHICS_MODEL, this.state.input)
       .then(response => {
         if (response) {
+          console.log(response)
           fetch('http://localhost:3000/image', {
             method: 'put',
             headers: { 'Content-Type': 'application/json' },
@@ -84,6 +106,7 @@ class App extends Component {
             .catch(console.log)
         }
         this.displayFaceBox(this.calculateFaceLocation(response))
+        this.displayResults(response)
       })
       .catch(err => console.log(err))
   }
@@ -104,7 +127,7 @@ class App extends Component {
   }
 
   render() {
-    const { isSignedin, box, imgUrl, route } = this.state
+    const { isSignedin, box, imgUrl, route, results } = this.state
     return (
       <div className="App">
         <Navigation
@@ -113,7 +136,6 @@ class App extends Component {
         />
         {route === 'home' ? (
           <div>
-            <Logo />
             <Rank
               name={this.state.user.name}
               entries={this.state.user.entries}
@@ -122,6 +144,7 @@ class App extends Component {
               onInputChange={this.onInputChange}
               onPictureSubmit={this.onPictureSubmit}
             />
+            <Results results={results} />
             <FaceRecognition box={box} imgUrl={imgUrl} />
           </div>
         ) : route === 'signin' ? (
