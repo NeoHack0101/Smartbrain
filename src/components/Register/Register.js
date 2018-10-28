@@ -16,7 +16,8 @@ class Register extends React.Component {
     })
   }
 
-  onSubmit = () => {
+  onSubmit = e => {
+    e.preventDefault()
     fetch('http://localhost:3000/register', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -32,10 +33,13 @@ class Register extends React.Component {
   }
 
   render() {
-    const { onRouteChange } = this.props
     return (
       <article className="br3 ba  b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
-        <main className="pa4 black-80">
+        <form
+          className="pa4 black-80"
+          onSubmit={this.onSubmit}
+          autoComplete="off"
+        >
           <div className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
               <legend className="f1 fw6 ph0 mh0">Register</legend>
@@ -44,10 +48,11 @@ class Register extends React.Component {
                   Name
                 </label>
                 <input
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white "
                   type="name"
                   name="name"
                   id="name"
+                  required
                   onChange={this.onInputChange}
                 />
               </div>
@@ -56,10 +61,11 @@ class Register extends React.Component {
                   Email
                 </label>
                 <input
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white"
                   type="email"
                   name="email"
                   id="email"
+                  required
                   onChange={this.onInputChange}
                 />
               </div>
@@ -68,24 +74,24 @@ class Register extends React.Component {
                   Password
                 </label>
                 <input
-                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white "
                   type="password"
                   name="password"
                   id="password"
+                  required
                   onChange={this.onInputChange}
                 />
               </div>
             </fieldset>
             <div className="">
               <input
-                onClick={this.onSubmit}
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                 type="submit"
                 value="Register"
               />
             </div>
           </div>
-        </main>
+        </form>
       </article>
     )
   }
