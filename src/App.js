@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Clarifai from 'clarifai'
 import FaceRecognition from './components/FaceRecognition/FaceRecognition'
 import Navigation from './components/Navigation/Navigation'
 import Logo from './components/Logo/Logo'
@@ -10,23 +9,20 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
 import Results from './components/Results/Results'
 import './App.css'
 
-const app = new Clarifai.App({
-  apiKey: '3ec8ae8c060f41ea9c1b3f3fd997ff69'
-})
-
 const initialState = {
   input: '',
   imgUrl: '',
   box: {},
   results: {},
-  route: 'signin',
-  isSignedin: false,
+  route: 'home',
+  isSignedin: true,
   user: {
     id: '',
     name: '',
     email: '',
     entries: 0,
-    joined: ''
+    joined: '',
+    previous_age: 0
   }
 }
 
@@ -77,38 +73,55 @@ class App extends Component {
     this.setState({ input: event.target.value })
   }
 
+  componentWillUnmount() {
+    console.log('component will unmount!!!')
+    fetch('http://localhost:3000/image/age', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: this.state.user.id,
+        age: this.state.results.age
+      })
+    }).catch(console.log)
+  }
+
   onPictureSubmit = () => {
     this.setState({ imgUrl: this.state.input })
 
-    app.models
-      .predict(Clarifai.DEMOGRAPHICS_MODEL, this.state.input)
+    fetch('http://localhost:3000/imageurl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+      .then(data => data.json())
       .then(response => {
-        if (response) {
-          console.log(response)
-          fetch('http://localhost:3000/image', {
-            method: 'put',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              id: this.state.user.id
-            })
-          })
-            .then(res => res.json())
-            .then(entries => {
-              if (entries) {
-                this.setState({
-                  user: {
-                    ...this.state.user,
-                    entries: entries
-                  }
-                })
-              }
-            })
-            .catch(console.log)
-        }
-        this.displayFaceBox(this.calculateFaceLocation(response))
         this.displayResults(response)
+        this.displayFaceBox(this.calculateFaceLocation(response))
       })
       .catch(err => console.log(err))
+
+    // fetch('http://localhost:3000/image', {
+    //   method: 'put',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     id: this.state.user.id,
+    //     age: this.state.results.age
+    //   })
+    // })
+    //   .then(res => res.json())
+    //   .then(entries => {
+    //     if (entries) {
+    //       this.setState({
+    //         user: {
+    //           ...this.state.user,
+    //           entries: entries
+    //         }
+    //       })
+    //     }
+    //   })
+    //   .catch(console.log)
   }
 
   onRouteChange = route => {
@@ -127,7 +140,7 @@ class App extends Component {
   }
 
   render() {
-    const { isSignedin, box, imgUrl, route, results } = this.state
+    const { isSignedin, box, imgUrl, route, results, user } = this.state
     return (
       <div className="App">
         <Navigation
@@ -136,10 +149,7 @@ class App extends Component {
         />
         {route === 'home' ? (
           <div>
-            <Rank
-              name={this.state.user.name}
-              entries={this.state.user.entries}
-            />
+            <Rank name={user.name} age={user.previous_age} />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onPictureSubmit={this.onPictureSubmit}

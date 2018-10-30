@@ -3,13 +3,12 @@ import './ImageLinkForm.css'
 
 const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
   return (
-    <div>
-      <p className="f3">
-        {
-          'This Smart Brain estimates you age and gender appearance. Give it a try!'
-        }
-      </p>
-      <div className="center">
+    <div className="ma3">
+      <div className="f4 b">
+        This Smart Brain estimates you age, gender and racial appearance. Give
+        it a try!
+      </div>
+      <div className="center ma3">
         <div className=" center pa2 br3 shadow-2 ">
           <input
             className="f4 pa2 w-70 center"
