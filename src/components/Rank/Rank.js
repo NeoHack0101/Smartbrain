@@ -13,7 +13,7 @@ const Rank = ({ name, age }) => {
 
   return (
     <div>
-      <div className="b f3">{`Welcome ${name.toUpperCase()}`}</div>
+      <div className="b f3">{`Welcome ${name ? name.toUpperCase() : ''}`}</div>
 
       <div className="white f2" />
     </div>
