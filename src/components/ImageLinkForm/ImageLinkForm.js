@@ -4,7 +4,7 @@ import './ImageLinkForm.css'
 const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
   return (
     <div className="ma3">
-      <div className="f4 b">
+      <div className="f4">
         This Smart Brain estimates you age, gender and racial appearance. Give
         it a try!
       </div>

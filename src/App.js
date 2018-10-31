@@ -14,8 +14,8 @@ const initialState = {
   imgUrl: '',
   box: {},
   results: {},
-  route: 'home',
-  isSignedin: true,
+  route: 'login',
+  isSignedin: false,
   user: {
     id: '',
     name: '',
@@ -59,7 +59,6 @@ class App extends Component {
     const race =
       data.outputs[0].data.regions[0].data.face.multicultural_appearance
         .concepts[0].name
-    console.log('age', age, 'gender', gender, 'race', race)
     this.setState({
       results: {
         age: age,
@@ -73,10 +72,9 @@ class App extends Component {
     this.setState({ input: event.target.value })
   }
 
-  componentWillUnmount() {
-    console.log('component will unmount!!!')
-    fetch('http://localhost:3000/image/age', {
-      method: 'post',
+  updateDB = () => {
+    fetch('https://enigmatic-inlet-62656.herokuapp.com/image/age', {
+      method: 'put',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id: this.state.user.id,
@@ -88,7 +86,7 @@ class App extends Component {
   onPictureSubmit = () => {
     this.setState({ imgUrl: this.state.input })
 
-    fetch('http://localhost:3000/imageurl', {
+    fetch('https://enigmatic-inlet-62656.herokuapp.com/imageurl', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -99,6 +97,7 @@ class App extends Component {
       .then(response => {
         this.displayResults(response)
         this.displayFaceBox(this.calculateFaceLocation(response))
+        this.updateDB()
       })
       .catch(err => console.log(err))
 
