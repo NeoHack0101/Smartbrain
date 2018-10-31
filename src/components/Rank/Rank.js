@@ -1,15 +1,15 @@
 import React from 'react'
 
 const Rank = ({ name, age }) => {
-  if (age < 99) {
-    return (
-      <div className=" f3">
-        {`Welcome ${
-          name ? name.toUpperCase() : ''
-        }, on you previous login you appeared ${age} years old`}
-      </div>
-    )
-  }
+  // if (age < 99) {
+  //   return (
+  //     <div className=" f3">
+  //       {`Welcome ${
+  //         name ? name.toUpperCase() : ''
+  //       }, on you previous login you appeared ${age} years old`}
+  //     </div>
+  //   )
+  // }
 
   return (
     <div>

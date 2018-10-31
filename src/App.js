@@ -14,7 +14,7 @@ const initialState = {
   imgUrl: '',
   box: {},
   results: {},
-  route: 'login',
+  route: 'signin',
   isSignedin: false,
   user: {
     id: '',
@@ -148,6 +148,7 @@ class App extends Component {
         />
         {route === 'home' ? (
           <div>
+            <Logo />
             <Rank name={user.name} age={user.previous_age} />
             <ImageLinkForm
               onInputChange={this.onInputChange}
