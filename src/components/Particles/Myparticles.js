@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import Particles from "react-particles-js";
-import "./Myparticles.css";
+import React, { Component } from 'react'
+import Particles from 'react-particles-js'
+import './Myparticles.css'
 
 const particlesOptions = {
   particles: {
@@ -13,28 +13,28 @@ const particlesOptions = {
     },
     move: {
       enable: true,
-      out_mode: "bounce"
+      out_mode: 'bounce'
     }
   },
   interactivity: {
-    detect_on: "window",
+    detect_on: 'window',
     events: {
       onhover: {
         enable: false,
-        mode: "grab"
+        mode: 'repulse'
       },
       onclick: {
-        enable: false,
-        mode: "repulse"
+        enable: true,
+        mode: 'repulse'
       }
     }
   }
-};
+}
 
 class Myparticles extends Component {
   render() {
-    return <Particles className="particles" params={particlesOptions} />;
+    return <Particles className="particles" params={particlesOptions} />
   }
 }
 
-export default Myparticles;
+export default Myparticles
